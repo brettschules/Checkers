@@ -1,29 +1,45 @@
-class Cell() {
-  constructor(x,y) {
-    this.x = x
+class ChessPiece() {
+
+
+}
+
+class Cell {
+  constructor(x,y,color) {
+    this.x = x,
     this.y = y
+    this.color = color
   }
 }
 
-class Board() {
+class Board {
   constructor() {
 
     this.board = [
-                    [new Cell(00, new Cell(10),new Cell(20),new Cell(30),new Cell(40),new Cell(50),new Cell(60),new Cell(70)],
-                    [new Cell(01, new Cell(11),new Cell(21),new Cell(31),new Cell(41),new Cell(51),new Cell(61),new Cell(71)],
-                    [new Cell(02, new Cell(12),new Cell(22),new Cell(32),new Cell(42),new Cell(52),new Cell(62),new Cell(72)],
-                    [new Cell(03, new Cell(13),new Cell(23),new Cell(33),new Cell(43),new Cell(53),new Cell(63),new Cell(73)],
-                    [new Cell(04, new Cell(14),new Cell(24),new Cell(34),new Cell(44),new Cell(54),new Cell(64),new Cell(74)],
-                    [new Cell(05, new Cell(15),new Cell(25),new Cell(35),new Cell(45),new Cell(55),new Cell(65),new Cell(75)],
-                    [new Cell(06, new Cell(16),new Cell(26),new Cell(36),new Cell(46),new Cell(56),new Cell(66),new Cell(76)],
-                    [new Cell(06, new Cell(17),new Cell(27),new Cell(37),new Cell(47),new Cell(57),new Cell(67),new Cell(77)],
+                    [ new Cell(1,0),new Cell(2,0),new Cell(3,0),new Cell(4,0),new Cell(5,0),new Cell(6,0),new Cell(7,0),new Cell(8,0)],
+                    [ new Cell(1,1),new Cell(2,1),new Cell(3,1),new Cell(4,1),new Cell(5,1),new Cell(6,1),new Cell(7,1),new Cell(8,1)],
+                    [ new Cell(1,2),new Cell(2,2),new Cell(3,2),new Cell(4,2),new Cell(5,2),new Cell(6,2),new Cell(7,2),new Cell(8,2)],
+                    [ new Cell(1,3),new Cell(2,3),new Cell(3,3),new Cell(4,3),new Cell(5,3),new Cell(6,3),new Cell(7,3),new Cell(8,3)],
+                    [ new Cell(1,4),new Cell(2,4),new Cell(3,4),new Cell(4,4),new Cell(5,4),new Cell(6,4),new Cell(7,4),new Cell(8,4)],
+                    [ new Cell(1,5),new Cell(2,5),new Cell(3,5),new Cell(4,5),new Cell(5,5),new Cell(6,5),new Cell(7,5),new Cell(8,5)],
+                    [ new Cell(1,6),new Cell(2,6),new Cell(3,6),new Cell(4,6),new Cell(5,6),new Cell(6,6),new Cell(7,6),new Cell(8,6)],
+                    [ new Cell(1,7),new Cell(2,7),new Cell(3,7),new Cell(4,7),new Cell(5,7),new Cell(6,7),new Cell(7,7),new Cell(8,7)]
+                                                                                                                                        ]
+  }
+
+  gameStart() {
+  for (let i = 0; i < this.board.length; i++) {
+   let rows = this.board[i]
+     for (let e = 0; e < rows.length; e++) {
+      console.log(rows[e])
+    }
+  }
+}
 
 
 
 
+class App {
+  constructor() {
 
-
-
-                                                                                                                                ]
   }
 }
