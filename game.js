@@ -1,9 +1,17 @@
 class ChessPiece {
   constructor(player) {
     this.player = player
+    this.ChessPiece = this.generateChessPiece
   }
 
   generateChessPiece() {
+    if(this.player === "red") {
+      // generate red chips by adding to class in CSS
+      console.log("red")
+    } else if (this.player === "grey") {
+      // generate grey chips by add to class in CSS
+      console.log("grey")
+    }
   }
 }
 
@@ -12,6 +20,10 @@ class Cell {
     this.x = x,
     this.y = y,
     this.color = color
+  }
+
+  addPiece(pieces) {
+     console.log(pieces)
   }
 }
 
@@ -44,25 +56,34 @@ class Board {
 }
 
 class Player {
-  constructor() {
-    this.start = false
+  constructor(color) {
+     this.color = color
+     return this.color
   }
 }
 
 class Game {
   constructor() {
-    this.playerOne = new Player()
-    this.playerTwo = new Player()
+    this.playerOne = new Player("red")
+    this.playerTwo = new Player("grey")
     this.board = new Board().board
   }
 
 
 
   loadPieces() {
-    this.first12 = []
-    this.board.forEach(row => this.first12.push(row.filter(e => e.color === "black")))
-    this.first12.splice(0,4)
+    this.array = []
+    this.board.forEach(row => this.array.push(row.filter(e => e.color === "black")))
+    this.first12 = this.array.slice(0,3)
+    this.last12 = this.array.slice(this.array.length - 3)
     this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerOne))))
-    this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerTwo))))
+    this.last12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerTwo))))
   }
+}
+
+class App {
+  constructor() {
+
+  }
+
 }
