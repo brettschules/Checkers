@@ -5,6 +5,7 @@ class ChessPiece {
   }
 
     generateChessPiece() {
+      debugger
     if(this.player.color === "red") {
       // generate red chips by adding to class in CSS
       console.log("red")
@@ -16,7 +17,7 @@ class ChessPiece {
 
   render() {
     return (
-      `div class=piece`
+      `div class = ${piece}`
     )
   }
 }
@@ -35,7 +36,7 @@ class Cell {
 
   render() {
     return (
-      `<div data-x='${this.x}' data-y='${this.y}'class='cell ${this.color}'></div>`
+      `<div data-x='${this.x}' data-y='${this.y}'class='cell cell-${this.color}'></div>`
     )
   }
 }
@@ -102,6 +103,12 @@ class Game {
 
 class App {
   constructor() {
-
+    this.game = new Game()
+  }
+  render() {
+    document.getElementById('container').innerHTML = this.game.board.render()
   }
 }
+
+checkers = new App()
+checkers.render()
