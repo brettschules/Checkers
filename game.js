@@ -1,45 +1,68 @@
-class ChessPiece() {
+class ChessPiece {
+  constructor(player) {
+    this.player = player
+  }
 
-
+  generateChessPiece() {
+  }
 }
 
 class Cell {
-  constructor(x,y,color) {
+  constructor(x, y, color) {
     this.x = x,
-    this.y = y
+    this.y = y,
     this.color = color
   }
 }
 
 class Board {
   constructor() {
-
-    this.board = [
-                    [ new Cell(1,0),new Cell(2,0),new Cell(3,0),new Cell(4,0),new Cell(5,0),new Cell(6,0),new Cell(7,0),new Cell(8,0)],
-                    [ new Cell(1,1),new Cell(2,1),new Cell(3,1),new Cell(4,1),new Cell(5,1),new Cell(6,1),new Cell(7,1),new Cell(8,1)],
-                    [ new Cell(1,2),new Cell(2,2),new Cell(3,2),new Cell(4,2),new Cell(5,2),new Cell(6,2),new Cell(7,2),new Cell(8,2)],
-                    [ new Cell(1,3),new Cell(2,3),new Cell(3,3),new Cell(4,3),new Cell(5,3),new Cell(6,3),new Cell(7,3),new Cell(8,3)],
-                    [ new Cell(1,4),new Cell(2,4),new Cell(3,4),new Cell(4,4),new Cell(5,4),new Cell(6,4),new Cell(7,4),new Cell(8,4)],
-                    [ new Cell(1,5),new Cell(2,5),new Cell(3,5),new Cell(4,5),new Cell(5,5),new Cell(6,5),new Cell(7,5),new Cell(8,5)],
-                    [ new Cell(1,6),new Cell(2,6),new Cell(3,6),new Cell(4,6),new Cell(5,6),new Cell(6,6),new Cell(7,6),new Cell(8,6)],
-                    [ new Cell(1,7),new Cell(2,7),new Cell(3,7),new Cell(4,7),new Cell(5,7),new Cell(6,7),new Cell(7,7),new Cell(8,7)]
-                                                                                                                                        ]
+    this.boardSize = 8
+    this.board = this.generateBoard()
   }
 
-  gameStart() {
-  for (let i = 0; i < this.board.length; i++) {
-   let rows = this.board[i]
-     for (let e = 0; e < rows.length; e++) {
-      console.log(rows[e])
+  generateBoard() {
+    let colors = ['white', 'black']
+    var boardArray = []
+
+    for (let x = 0; x < this.boardSize; x++) {
+      let colorNum = 0
+      if (x % 2 === 0) {
+        colorNum = 0
+      } else {
+        colorNum = 1
+      }
+      let rowArray = []
+      for (let y = 0; y < this.boardSize; y++) {
+        colorNum === 1 ? colorNum = 0 : colorNum = 1
+        rowArray.push(new Cell(x, y, colors[colorNum]))
+      }
+      boardArray.push(rowArray)
     }
+    return boardArray
   }
 }
 
-
-
-
-class App {
+class Player {
   constructor() {
+    this.start = false
+  }
+}
 
+class Game {
+  constructor() {
+    this.playerOne = new Player()
+    this.playerTwo = new Player()
+    this.board = new Board().board
+  }
+
+
+
+  loadPieces() {
+    this.first12 = []
+    this.board.forEach(row => this.first12.push(row.filter(e => e.color === "black")))
+    this.first12.splice(0,4)
+    this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerOne))))
+    this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerTwo))))
   }
 }
