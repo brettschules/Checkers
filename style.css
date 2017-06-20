@@ -1,0 +1,45 @@
+#container {
+
+ margin:auto;
+ margin-top: 50px;
+ width: 600px;
+ height: 600px;
+ border: 5px solid black;
+}
+
+.board {
+ width: 600px;
+ height:600px;
+}
+
+div.cell {
+ width: 75px;
+ height: 75px;
+ float: left;
+}
+
+div.black {
+ background-color: black;
+}
+
+div.white {
+ background-color: white;
+}
+
+div.piecewhite {
+ background-color: white;
+ width: 50px;
+ height: 50px;
+ margin:auto;
+ margin-top:12.5px;
+ border-radius: 25px;
+}
+
+div.piecegrey {
+ background-color: grey;
+ width: 50px;
+ height: 50px;
+ margin:auto;
+ margin-top:12.5px;
+ border-radius: 25px;
+}
