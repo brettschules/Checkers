@@ -6,31 +6,31 @@ class ChessPiece {
 
   generateChessPiece() {
     this.color = ""
-    if (this.player === "red") {
+
+    if (this.player.color === "red") {
       // needs to be this.player.color when not debugging
       this.color = "red"
-    } else if (this.player === "grey") {
+    } else if (this.player.color === "grey") {
       // needs to be this.player.color when not debugging
       this.color = "grey"
     }
     return this.color
+
   }
 
   displayChessPieces() {
     this.div = ``
-
     if (this.generateChessPiece() === "red") {
-      this.div = `<div class='piece-${this.generateChessPiece()}'></div`
+      this.div = `<div class='piece-${this.generateChessPiece()}'> </div>`
+
     } else if (this.generateChessPiece() === "grey") {
-      this.div = `<div class ='piece-${this.generateChessPiece()}'></div`
+      this.div = `<div class='piece-${this.generateChessPiece()}'> </div>`
     }
     return this.div
   }
 
   render() {
-    return (
-      this.displayChessPieces()
-    )
+    return this.displayChessPieces()
   }
 }
 
@@ -49,7 +49,12 @@ class ChessPiece {
 
     render() {
       return (
-        `<div data-x='${this.x}' data-y='${this.y}'class='cell cell-${this.color}'></div>`
+        `<div data-x='${this.x}' data-y='${this.y}'class='cell cell-${this.color}'>
+          ${this.piece !== null ? this.piece.render() : ""}
+        </div>`
+
+
+
       )
     }
   }
@@ -113,6 +118,10 @@ class ChessPiece {
       this.last12 = this.array.slice(this.array.length - 3)
       this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerOne))))
       this.last12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerTwo))))
+    }
+
+    movePieces() {
+
     }
   }
 

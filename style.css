@@ -18,6 +18,12 @@ div.cell {
  float: left;
 }
 
+div.cell {
+ width: 75px;
+ height: 75px;
+ float: left;
+}
+
 div.cell-black {
  background-color: black;
 }
@@ -26,8 +32,8 @@ div.cell-white {
  background-color: white;
 }
 
-div.piece-white {
- background-color: white;
+div.piece-red {
+ background-color: red;
  width: 50px;
  height: 50px;
  margin:auto;
@@ -35,7 +41,7 @@ div.piece-white {
  border-radius: 25px;
 }
 
-div.piecegrey {
+div.piece-grey {
  background-color: grey;
  width: 50px;
  height: 50px;
