@@ -18,7 +18,6 @@ class Cell {
   }
 
   getCoordinates(clicked) {
-    console.log(clicked)
     this.x = x
     this.y = y
   }
@@ -123,7 +122,6 @@ class CheckerRules {
     switch(currentPlayerChessPieceColor) {
     case "grey":
 
-
         if (origin.x - 1 === destination.x && origin.y - 1  === destination.y) {
           return true
         } else if (origin.x -1 === destination.x &&  origin.y + 1 === destination.y) {
@@ -139,8 +137,6 @@ class CheckerRules {
       } else if (true) {
 
       }
-
-
     default:
         return false
     }
@@ -152,12 +148,15 @@ class App {
     this.game = new Game()
     this.game.rules = new CheckerRules
     this.boardContainer = document.getElementById("container")
-    //this.boardContainer.addEventListener("click", this.onClick.bind(this))
+
+    this.boardContainer.addEventListener("click", this.onClick.bind(this))
   }
 
   onClick() {
     const clickedEvent = event.target
-    this.getCoordinates(clickedEvent)
+
+    console.log(clickedEvent.className)
+    // this.game.board[parseInt(event.target.dataset.x)][parseInt(event.target.dataset.y)]
   }
 
   render() {
@@ -167,3 +166,27 @@ class App {
 
 checkers = new App()
 checkers.render()
+$( ".piece-grey" ).draggable({ containment: "#container" });
+
+// $( ".selector" ).draggable({
+//   disabled: true
+// });
+
+// $( ".piece-grey" ).draggable({
+//   opacity: 0.35
+// });
+
+$(".cell-black").droppable({ drop: Drop });
+
+function Drop(event, ui) {
+  var draggableId = ui.draggable.attr("class");
+  var droppableId = $(this).attr("class");
+  console.log(draggableId)
+  console.log(droppableId)
+}
+// $(".cell-black").droppable({
+//     drop: function(event, ui) {
+//         var id = ui.draggable.attr("class");
+//         console.log(id);
+//     }
+// });
