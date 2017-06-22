@@ -99,6 +99,27 @@ class Game {
   }
 }
 
+class App {
+  constructor() {
+    this.game = new Game()
+    this.game.rules = new CheckerRules
+    this.boardContainer = document.getElementById("container")
+
+    this.boardContainer.addEventListener("click", this.onClick.bind(this))
+  }
+
+  onClick() {
+    const clickedEvent = event.target
+
+    // console.log(clickedEvent.className)
+    // this.game.board[parseInt(event.target.dataset.x)][parseInt(event.target.dataset.y)]
+  }
+
+  render() {
+    document.getElementById('container').innerHTML = this.game.boardObj.render()
+  }
+}
+
 class CheckerRules {
   constructor() {
 
@@ -143,30 +164,59 @@ class CheckerRules {
   }
 }
 
-class App {
-  constructor() {
-    this.game = new Game()
-    this.game.rules = new CheckerRules
-    this.boardContainer = document.getElementById("container")
-
-    this.boardContainer.addEventListener("click", this.onClick.bind(this))
-  }
-
-  onClick() {
-    const clickedEvent = event.target
-
-    console.log(clickedEvent.className)
-    // this.game.board[parseInt(event.target.dataset.x)][parseInt(event.target.dataset.y)]
-  }
-
-  render() {
-    document.getElementById('container').innerHTML = this.game.boardObj.render()
-  }
-}
 
 checkers = new App()
 checkers.render()
-$( ".piece-grey" ).draggable({ containment: "#container" });
+
+
+class GamePlay {
+  constructor() {
+    this.currentPlayPiece = "grey"
+    this.greyPlayerChips = 12
+    this.redPlayerChips = 12
+    this.greyPlayerMoves = 0
+    this.redPlayerMoves = 0
+    this.greyPlayerScore = 0
+    this.redPlayerScore = 0
+    this.time = "0:00"
+    this.valid = false
+
+    this.originCoordinates = ""
+    this.destinationCoordinates = ""
+  }
+
+
+
+  play() {
+
+      $(`.piece-${this.currentPlayPiece}`).draggable({
+      start: function(event, ui){
+
+      let originXCoordinates = ui.helper.parent('div').data().x.toString();
+      let originYCoordinates = ui.helper.parent('div').data().x.toString();
+      this.currentCoordinates = originXCoordinates + originYCoordinates
+      }
+    });
+    $(".cell-black").droppable({ drop: Drop });
+
+    function Drop(event, ui) {
+
+      var draggableId = ui.draggable.attr("class");
+      var droppableId = $(this).attr("class");
+      let destinationXCoordinates = $(this).data().x.toString()
+      let destinationYCoordinates = $(this).data().y.toString()
+
+      this.destinationCoordinates = destinationXCoordinates + destinationYCoordinates
+
+      console.log(this.destinationCoordinates)
+
+    }
+  }
+}
+
+g = new GamePlay()
+g.play()
+
 
 // $( ".selector" ).draggable({
 //   disabled: true
@@ -176,14 +226,20 @@ $( ".piece-grey" ).draggable({ containment: "#container" });
 //   opacity: 0.35
 // });
 
-$(".cell-black").droppable({ drop: Drop });
+// $(".cell-black").droppable({ drop: Drop });
+//
+// function Drop(event, ui) {
+//   var draggableId = ui.draggable.attr("class");
+//   var droppableId = $(this).attr("class");
+//   console.log(draggableId)
+//   console.log(droppableId)
+// }
 
-function Drop(event, ui) {
-  var draggableId = ui.draggable.attr("class");
-  var droppableId = $(this).attr("class");
-  console.log(draggableId)
-  console.log(droppableId)
-}
+// $( ".piece-grey" ).draggable({
+//   revert: true
+// });
+
+// get parent div
 // $(".cell-black").droppable({
 //     drop: function(event, ui) {
 //         var id = ui.draggable.attr("class");
