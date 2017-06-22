@@ -172,7 +172,7 @@ checkers.render()
 class GamePlay {
   constructor() {
     var self = this
-    this.currentPlayPiece = "grey"
+    this.currentPlayPiece = "red"
     this.greyPlayerChips = 12
     this.redPlayerChips = 12
     this.greyPlayerMoves = 0
@@ -194,9 +194,12 @@ class GamePlay {
 
         this.originY = ui.helper.parent('div').data().y;
 
-
       }.bind(this)
     });
+
+
+
+
 
     $(".cell-black").droppable({
       drop: function(event, ui) {
@@ -205,26 +208,32 @@ class GamePlay {
         let droppableId = $(this).attr("class");
         self.destinationX = $(this).data().x
         self.destinationY = $(this).data().y
+
+        $(this).html(`<div class="piece-red ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
+        ui.draggable.remove()
+        ui.draggable.removeClass(`.piece-${this.currentPlayPiece}`)
       }
     });
   }
 
 
   play() {
-
-
-
     let origin = checkers.game.board[this.originX][this.originY]
     let destination = checkers.game.board[this.destinationX][this.destinationY]
 
     if (checkers.game.rules.validMove(destination, origin)) {
-      this.revert = false
-      console.log("hit")
-    }
+      this.originX = 1
+      this.originY = 1
+      this.destinationX = 1
+      this.destinationY = 1
+      this.revert = true
+
+}
 
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
-      revert: this.revert
+
+      revert: self.revert
     });
 
   }
