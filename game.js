@@ -1,5 +1,5 @@
 class ChessPiece {
-  constructor(player,cell) {
+  constructor(player, cell) {
     this.player = player
     this.cell = cell
   }
@@ -12,8 +12,8 @@ class ChessPiece {
 class Cell {
   constructor(x, y, color) {
     this.x = x,
-    this.y = y,
-    this.color = color
+      this.y = y,
+      this.color = color
     this.piece = null
   }
 
@@ -94,8 +94,8 @@ class Game {
     this.board.forEach(row => this.array.push(row.filter(e => e.color === "black")))
     this.first12 = this.array.slice(0, 3)
     this.last12 = this.array.slice(this.array.length - 3)
-    this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerOne,cell))))
-    this.last12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerTwo,cell))))
+    this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerOne, cell))))
+    this.last12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerTwo, cell))))
   }
 }
 
@@ -125,7 +125,7 @@ class CheckerRules {
 
   }
 
-  validMove(destination,origin) {
+  validMove(destination, origin) {
     let currentPlayerChessPieceColor = origin.piece.player.color
 
     if (destination.x < 0 || destination.y < 0) {
@@ -140,25 +140,25 @@ class CheckerRules {
       return false
     }
 
-    switch(currentPlayerChessPieceColor) {
-    case "grey":
+    switch (currentPlayerChessPieceColor) {
+      case "grey":
 
-        if (origin.x - 1 === destination.x && origin.y - 1  === destination.y) {
+        if (origin.x - 1 === destination.x && origin.y - 1 === destination.y) {
           return true
-        } else if (origin.x -1 === destination.x &&  origin.y + 1 === destination.y) {
+        } else if (origin.x - 1 === destination.x && origin.y + 1 === destination.y) {
           return true
         } else if (true) {
 
         };
-    case "red":
-      if (origin.x + 1 === destination.x && origin.y - 1 === destination.y) {
-        return true
-      } else if (origin.x + 1 === destination.x && origin.y + 1 === destination.y) {
-        return true
-      } else if (true) {
+      case "red":
+        if (origin.x + 1 === destination.x && origin.y - 1 === destination.y) {
+          return true
+        } else if (origin.x + 1 === destination.x && origin.y + 1 === destination.y) {
+          return true
+        } else if (true) {
 
-      }
-    default:
+        }
+      default:
         return false
     }
   }
@@ -171,6 +171,7 @@ checkers.render()
 
 class GamePlay {
   constructor() {
+    var self = this
     this.currentPlayPiece = "grey"
     this.greyPlayerChips = 12
     this.redPlayerChips = 12
@@ -179,43 +180,64 @@ class GamePlay {
     this.greyPlayerScore = 0
     this.redPlayerScore = 0
     this.time = "0:00"
-    this.valid = false
+    this.revert = true
 
-    this.originCoordinates = ""
-    this.destinationCoordinates = ""
+    this.originX = 1
+    this.originY = 1
+    this.destinationX = 1
+    this.destinationY = 1
+
+    $(`.piece-${this.currentPlayPiece}`).draggable({
+      start: function(event, ui) {
+
+        this.originX = ui.helper.parent('div').data().x;
+
+        this.originY = ui.helper.parent('div').data().y;
+
+
+      }.bind(this)
+    });
+
+    $(".cell-black").droppable({
+      drop: function(event, ui) {
+
+        let draggableId = ui.draggable.attr("class");
+        let droppableId = $(this).attr("class");
+        self.destinationX = $(this).data().x
+        self.destinationY = $(this).data().y
+      }
+    });
   }
-
 
 
   play() {
 
-      $(`.piece-${this.currentPlayPiece}`).draggable({
-      start: function(event, ui){
 
-      let originXCoordinates = ui.helper.parent('div').data().x.toString();
-      let originYCoordinates = ui.helper.parent('div').data().x.toString();
-      this.currentCoordinates = originXCoordinates + originYCoordinates
-      }
-    });
-    $(".cell-black").droppable({ drop: Drop });
 
-    function Drop(event, ui) {
+    let origin = checkers.game.board[this.originX][this.originY]
+    let destination = checkers.game.board[this.destinationX][this.destinationY]
 
-      var draggableId = ui.draggable.attr("class");
-      var droppableId = $(this).attr("class");
-      let destinationXCoordinates = $(this).data().x.toString()
-      let destinationYCoordinates = $(this).data().y.toString()
-
-      this.destinationCoordinates = destinationXCoordinates + destinationYCoordinates
-
-      console.log(this.destinationCoordinates)
-
+    if (checkers.game.rules.validMove(destination, origin)) {
+      this.revert = false
+      console.log("hit")
     }
+
+
+    $(`.piece-${this.currentPlayPiece}`).draggable({
+      revert: this.revert
+    });
+
+  }
+
+  onClick() {
+    $( `.piece-${this.currentPlayPiece}`).mousedown(function() {
+      this.play()
+    }.bind(this))
   }
 }
 
 g = new GamePlay()
-g.play()
+g.onClick()
 
 
 // $( ".selector" ).draggable({
@@ -235,9 +257,7 @@ g.play()
 //   console.log(droppableId)
 // }
 
-// $( ".piece-grey" ).draggable({
-//   revert: true
-// });
+
 
 // get parent div
 // $(".cell-black").droppable({
