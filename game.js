@@ -87,15 +87,14 @@ class Game {
   }
 
 
-
   loadPieces() {
     this.array = []
 
     this.board.forEach(row => this.array.push(row.filter(e => e.color === "black")))
     this.first12 = this.array.slice(0, 3)
     this.last12 = this.array.slice(this.array.length - 3)
-    this.first12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerOne, cell))))
-    this.last12.forEach(rowArray => rowArray.forEach(cell => cell.addPiece(new ChessPiece(this.playerTwo, cell))))
+    this.first12.forEach(rowArray => rowArray.forEach((cell, index) => cell.addPiece(new ChessPiece(this.playerOne, cell ))))
+    this.last12.forEach(rowArray => rowArray.forEach((cell,index) => cell.addPiece(new ChessPiece(this.playerTwo, cell ))))
   }
 }
 
@@ -104,15 +103,6 @@ class App {
     this.game = new Game()
     this.game.rules = new CheckerRules
     this.boardContainer = document.getElementById("container")
-
-    this.boardContainer.addEventListener("click", this.onClick.bind(this))
-  }
-
-  onClick() {
-    const clickedEvent = event.target
-
-    // console.log(clickedEvent.className)
-    // this.game.board[parseInt(event.target.dataset.x)][parseInt(event.target.dataset.y)]
   }
 
   render() {
@@ -189,26 +179,22 @@ class GamePlay {
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
       start: function(event, ui) {
-
+        console.log('Dragging')
         this.originX = ui.helper.parent('div').data().x;
-
         this.originY = ui.helper.parent('div').data().y;
-
       }.bind(this)
     });
 
-
-
     $(".cell-black").droppable({
       drop: function(event, ui) {
-
+        self.play.bind(self)(checkers.game.board[this.dataset.x][this.dataset.y])
         let draggableId = ui.draggable.attr("class");
         let droppableId = $(this).attr("class");
         self.destinationX = $(this).data().x
         self.destinationY = $(this).data().y
         if (self.valid) {
-          $(this).html(`<div class="piece-red ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
-          console.log(`<div class="piece-${self.currentPlayPiece} ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
+          $(this).html(`<div class="piece-${self.currentPlayPiece} ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
+
           ui.draggable.remove()
           ui.draggable.removeClass(`.piece-${self.currentPlayPiece}`)
         }
@@ -216,34 +202,36 @@ class GamePlay {
     });
   }
 
-  play() {
-
-
-
-
-
-    let origin = checkers.game.board[this.originX][this.originY]
-    let destination = checkers.game.board[this.destinationX][this.destinationY]
-    console.log(destination)
+  play(destination) {
+    let originNode = event.target.parentElement
+    //let origin = checkers.game.board[this.originX][this.originY]
+    let origin = checkers.game.board[originNode.dataset.x][originNode.dataset.y]
+    //let destination = checkers.game.board[this.destinationX][this.destinationY]
     if (checkers.game.rules.validMove(destination, origin)) {
       this.originX = 1
       this.originY = 1
       this.destinationX = 1
       this.destinationY = 1
       this.valid = true
-
       if (this.currentPlayPiece === "red") {
+
         this.currentPlayPiece = "grey"
         console.log(this.currentPlayPiece)
+        console.log(this.valid)
+
       } else if (this.currentPlayPiece === "grey") {
         this.currentPlayPiece = "red"
         console.log(this.currentPlayPiece)
+        console.log(this.valid)
+
       }
 
     } else {
-      this.valid = false
-    }
 
+      console.log('here')
+      this.valid = false
+      console.log(false)
+    }
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
 
@@ -257,9 +245,7 @@ class GamePlay {
   }
 
   onClick() {
-    $(`.piece-${this.currentPlayPiece}`).mousedown(function() {
-      this.play()
-    }.bind(this))
+    $(`.piece-${this.currentPlayPiece}`).mousedown()
   }
 }
 
