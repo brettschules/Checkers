@@ -118,17 +118,17 @@ class CheckerRules {
   validMove(destination, origin) {
     let currentPlayerChessPieceColor = origin.piece.player.color
 
-    if (destination.x < 0 || destination.y < 0) {
+    if (destination.x < 0 && destination.y < 0) {
       return false
     }
 
-    if (destination.piece !== null) {
-      return false
-    }
+    // if (destination.piece !== null) {
+    //   return false
+    // }
 
-    if (destination.piece !== null && currentPlayerChessPieceColor === destination.piece.player.color) {
-      return false
-    }
+    // if (destination.piece !== null && currentPlayerChessPieceColor === destination.piece.player.color) {
+    //   return false
+    // }
 
     switch (currentPlayerChessPieceColor) {
       case "grey":
@@ -169,13 +169,19 @@ class GamePlay {
     this.redPlayerScore = 0
     this.time = "0:00"
     this.valid = false
-
-    this.originX = 1
-    this.originY = 1
-    this.destinationX = 1
-    this.destinationY = 1
+    this.moveDefault = false
+    // this.redTurn = true
+    // this.greyTurn = true
 
 
+  if (this.moveDefault === false) {
+
+
+    $(`.piece-${this.currentPlayPiece}`).draggable({
+
+      revert: true
+    });
+}
     $(`.piece-${this.currentPlayPiece}`).draggable({
       start: function(event, ui) {
 
@@ -214,23 +220,20 @@ class GamePlay {
       if (this.currentPlayPiece === "red") {
         this.addClassColor = "red"
         this.currentPlayPiece = "grey"
-
-        console.log(this.currentPlayPiece)
+        this.redTurn = true
 
       } else if (this.currentPlayPiece === "grey") {
         this.addClassColor = "grey"
         this.currentPlayPiece = "red"
-        console.log(this.currentPlayPiece)
-        console.log(this.valid)
-
       }
 
     } else {
 
-      console.log('here')
       this.valid = false
-      console.log(false)
     }
+
+    console.log(this.currentPlayPiece)
+    console.log(this.valid)
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
 
@@ -241,6 +244,12 @@ class GamePlay {
       opacity: 0.35
     });
 
+    // $(`.piece-red`).draggable({
+    //   disabled: !self.redTurn
+    //
+    // });
+
+    this.moveDefault = true
   }
 
   onClick() {
