@@ -180,7 +180,7 @@ class GamePlay {
     this.greyPlayerScore = 0
     this.redPlayerScore = 0
     this.time = "0:00"
-    this.revert = true
+    this.valid = false
 
     this.originX = 1
     this.originY = 1
@@ -199,8 +199,6 @@ class GamePlay {
 
 
 
-
-
     $(".cell-black").droppable({
       drop: function(event, ui) {
 
@@ -208,38 +206,58 @@ class GamePlay {
         let droppableId = $(this).attr("class");
         self.destinationX = $(this).data().x
         self.destinationY = $(this).data().y
-
-        $(this).html(`<div class="piece-red ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
-        ui.draggable.remove()
-        ui.draggable.removeClass(`.piece-${this.currentPlayPiece}`)
+        if (self.valid) {
+          $(this).html(`<div class="piece-red ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
+          console.log(`<div class="piece-${self.currentPlayPiece} ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
+          ui.draggable.remove()
+          ui.draggable.removeClass(`.piece-${self.currentPlayPiece}`)
+        }
       }
     });
   }
 
-
   play() {
+
+
+
+
+
     let origin = checkers.game.board[this.originX][this.originY]
     let destination = checkers.game.board[this.destinationX][this.destinationY]
-
+    console.log(destination)
     if (checkers.game.rules.validMove(destination, origin)) {
       this.originX = 1
       this.originY = 1
       this.destinationX = 1
       this.destinationY = 1
-      this.revert = true
+      this.valid = true
 
-}
+      if (this.currentPlayPiece === "red") {
+        this.currentPlayPiece = "grey"
+        console.log(this.currentPlayPiece)
+      } else if (this.currentPlayPiece === "grey") {
+        this.currentPlayPiece = "red"
+        console.log(this.currentPlayPiece)
+      }
+
+    } else {
+      this.valid = false
+    }
 
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
 
-      revert: self.revert
+      revert: !self.valid
+    });
+
+    $(`.piece-${this.currentPlayPiece}`).draggable({
+      opacity: 0.35
     });
 
   }
 
   onClick() {
-    $( `.piece-${this.currentPlayPiece}`).mousedown(function() {
+    $(`.piece-${this.currentPlayPiece}`).mousedown(function() {
       this.play()
     }.bind(this))
   }
@@ -251,27 +269,4 @@ g.onClick()
 
 // $( ".selector" ).draggable({
 //   disabled: true
-// });
-
-// $( ".piece-grey" ).draggable({
-//   opacity: 0.35
-// });
-
-// $(".cell-black").droppable({ drop: Drop });
-//
-// function Drop(event, ui) {
-//   var draggableId = ui.draggable.attr("class");
-//   var droppableId = $(this).attr("class");
-//   console.log(draggableId)
-//   console.log(droppableId)
-// }
-
-
-
-// get parent div
-// $(".cell-black").droppable({
-//     drop: function(event, ui) {
-//         var id = ui.draggable.attr("class");
-//         console.log(id);
-//     }
 // });
