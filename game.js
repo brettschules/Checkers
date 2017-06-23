@@ -154,21 +154,12 @@ class CheckerRules {
   }
 }
 
-class CurrentPlayPiece {
-  constructor() {
-    this.color = "red"
-  //   if (arguments.length === 0) {
-  //     this.color = "red"
-  //   } else {
-  //     this.color = color
-  //   }
-  }
-}
-
 
 class GamePlay {
   constructor() {
     var self = this
+    this.defaultColor = 0
+    this.addClassColor = "red"
     this.currentPlayPiece = "red"
     this.greyPlayerChips = 12
     this.redPlayerChips = 12
@@ -183,7 +174,7 @@ class GamePlay {
     this.originY = 1
     this.destinationX = 1
     this.destinationY = 1
-    this.currentPlayPieceTest = new CurrentPlayPiece()
+
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
       start: function(event, ui) {
@@ -194,6 +185,7 @@ class GamePlay {
     });
 
     $(".cell-black").droppable({
+
       drop: function(event, ui) {
         self.play.bind(self)(checkers.game.board[this.dataset.x][this.dataset.y])
         let draggableId = ui.draggable.attr("class");
@@ -201,10 +193,10 @@ class GamePlay {
         self.destinationX = $(this).data().x
         self.destinationY = $(this).data().y
         if (self.valid) {
-          $(this).html(`<div class="piece-${self.currentPlayPiece} ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
+          $(this).html(`<div class="piece-${self.addClassColor} ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
 
           ui.draggable.remove()
-          ui.draggable.removeClass(`.piece-${self.currentPlayPiece}`)
+          ui.draggable.removeClass(`.piece-${self.addClassColor}`)
         }
       }
     });
@@ -219,16 +211,14 @@ class GamePlay {
       this.destinationX = 1
       this.destinationY = 1
       this.valid = true
-      console.log(this.currentPlayPieceTest.color)
-      this.currentPlayPieceTest.color = "grey"
-      console.log(this.currentPlayPieceTest.color)
       if (this.currentPlayPiece === "red") {
-
+        this.addClassColor = "red"
         this.currentPlayPiece = "grey"
+
         console.log(this.currentPlayPiece)
-        console.log(this.valid)
 
       } else if (this.currentPlayPiece === "grey") {
+        this.addClassColor = "grey"
         this.currentPlayPiece = "red"
         console.log(this.currentPlayPiece)
         console.log(this.valid)
