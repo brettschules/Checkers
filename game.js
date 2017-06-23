@@ -154,9 +154,16 @@ class CheckerRules {
   }
 }
 
-
-checkers = new App()
-checkers.render()
+class CurrentPlayPiece {
+  constructor() {
+    this.color = "red"
+  //   if (arguments.length === 0) {
+  //     this.color = "red"
+  //   } else {
+  //     this.color = color
+  //   }
+  }
+}
 
 
 class GamePlay {
@@ -176,10 +183,11 @@ class GamePlay {
     this.originY = 1
     this.destinationX = 1
     this.destinationY = 1
+    this.currentPlayPieceTest = new CurrentPlayPiece()
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
       start: function(event, ui) {
-        console.log('Dragging')
+
         this.originX = ui.helper.parent('div').data().x;
         this.originY = ui.helper.parent('div').data().y;
       }.bind(this)
@@ -204,15 +212,16 @@ class GamePlay {
 
   play(destination) {
     let originNode = event.target.parentElement
-    //let origin = checkers.game.board[this.originX][this.originY]
     let origin = checkers.game.board[originNode.dataset.x][originNode.dataset.y]
-    //let destination = checkers.game.board[this.destinationX][this.destinationY]
     if (checkers.game.rules.validMove(destination, origin)) {
       this.originX = 1
       this.originY = 1
       this.destinationX = 1
       this.destinationY = 1
       this.valid = true
+      console.log(this.currentPlayPieceTest.color)
+      this.currentPlayPieceTest.color = "grey"
+      console.log(this.currentPlayPieceTest.color)
       if (this.currentPlayPiece === "red") {
 
         this.currentPlayPiece = "grey"
@@ -249,8 +258,12 @@ class GamePlay {
   }
 }
 
+checkers = new App()
+checkers.render()
+
 g = new GamePlay()
 g.onClick()
+
 
 
 // $( ".selector" ).draggable({
