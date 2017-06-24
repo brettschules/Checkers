@@ -212,17 +212,19 @@ class GamePlay {
     let originNode = event.target.parentElement
     let origin = checkers.game.board[originNode.dataset.x][originNode.dataset.y]
     if (checkers.game.rules.validMove(destination, origin)) {
-      this.originX = 1
-      this.originY = 1
-      this.destinationX = 1
-      this.destinationY = 1
+
       this.valid = true
       if (this.currentPlayPiece === "red") {
+
+        checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
+        checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.addClassColor = "red"
         this.currentPlayPiece = "grey"
         this.redTurn = true
 
       } else if (this.currentPlayPiece === "grey") {
+        checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
+        checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.addClassColor = "grey"
         this.currentPlayPiece = "red"
       }
