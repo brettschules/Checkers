@@ -29,7 +29,7 @@ class Cell {
 
   render() {
     return (
-      `<div data-x='${this.x}' data-y='${this.y}'class='cell cell-${this.color}'>
+      `<div id='${this.x}${this.y}' data-x='${this.x}' data-y='${this.y}'class='cell cell-${this.color}'>
           ${this.piece !== null ? this.piece.render() : ""}
         </div>`
     )
@@ -112,13 +112,22 @@ class App {
 
 class CheckerRules {
   constructor() {
-    // this.checkForRedPiece = checkers.game.board[]
+    this.removeClass = ""
+    this.playerRedCheckmateCount = 0
+    this.playerGreyCheckmateCount = 0
+    this.checkForGreyPieceLeft = ""
+    this.checkForGreyPieceRight = ""
+  }
+
+  removeChessPieceWhenCheckmated(origin, removeClass) {
+    document.getElementById(`${origin.x + 1}${origin.y - 1}`).childNodes[0].remove(removeClass);
   }
 
   validMove(destination, origin) {
 
-
-    this.checkForGreyPiece = checkers.game.board
+    if(checkers.game.board[origin.x+1][origin.y-1].piece !==null) {
+      this.checkForGreyPieceLeft = checkers.game.board[origin.x+1][origin.y-1].piece
+    }
 
     let currentPlayerChessPieceColor = origin.piece.player.color
 
@@ -126,17 +135,6 @@ class CheckerRules {
       return false
     }
 
-
-
-
-
-    // if (destination.piece !== null) {
-    //   return false
-    // }
-
-    // if (destination.piece !== null && currentPlayerChessPieceColor === destination.piece.player.color) {
-    //   return false
-    // }
 
     switch (currentPlayerChessPieceColor) {
       case "grey":
@@ -154,11 +152,14 @@ class CheckerRules {
         } else if (origin.x + 1 === destination.x && origin.y + 1 === destination.y) {
           return true
         }
-        else if (origin.x+2 === destination.x && origin.y-2 === destination.y && this.checkForGreyPiece[origin.x+1][origin.y-1].piece.player.color != null) {
+        else if (origin.x+2 === destination.x && origin.y-2 === destination.y && this.checkForGreyPieceLeft) {
+          this.removeChessPieceWhenCheckmated(origin, "piece-grey")
+          this.playerRedCheckmateCount++
           return true
         }
           // checkmate
-        else if (origin.x+2 === destination.x && origin.y+2 === destination.y && this.checkForGreyPiece[origin.x+1][origin.y+1].piece.player.color != null) {
+        else if (origin.x+2 === destination.x && origin.y+2 === destination.y && this.checkForGreyPiece[origin.x+1][origin.y+1].piece.player.color) {
+          this.playerRedCheckmateCount++
           return true
         }
       default:
@@ -201,19 +202,12 @@ $(`.piece-${this.currentPlayPiece}`).draggable({
     this.originY = ui.helper.parent('div').data().y;
   }.bind(this)
 });
-    $(`.piece-${this.currentPlayPiece}`).draggable({
-      start: function(event, ui) {
-
-        this.originX = ui.helper.parent('div').data().x;
-        this.originY = ui.helper.parent('div').data().y;
-      }.bind(this)
-    });
 
     $(".cell-black").droppable({
 
       drop: function(event, ui) {
+
         self.play.bind(self)(checkers.game.board[this.dataset.x][this.dataset.y])
-        let draggableId = ui.draggable[0].className;
         let droppableId = $(this).attr("class");
         self.destinationX = $(this).data().x
         self.destinationY = $(this).data().y
