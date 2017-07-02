@@ -112,15 +112,23 @@ class App {
 
 class CheckerRules {
   constructor() {
-
+    // this.checkForRedPiece = checkers.game.board[]
   }
 
   validMove(destination, origin) {
+
+
+    this.checkForGreyPiece = checkers.game.board
+
     let currentPlayerChessPieceColor = origin.piece.player.color
 
     if (destination.x < 0 && destination.y < 0) {
       return false
     }
+
+
+
+
 
     // if (destination.piece !== null) {
     //   return false
@@ -137,7 +145,7 @@ class CheckerRules {
           return true
         } else if (origin.x - 1 === destination.x && origin.y + 1 === destination.y) {
           return true
-        } else if (true) {
+
 
         };
       case "red":
@@ -145,8 +153,13 @@ class CheckerRules {
           return true
         } else if (origin.x + 1 === destination.x && origin.y + 1 === destination.y) {
           return true
-        } else if (true) {
-
+        }
+        else if (origin.x+2 === destination.x && origin.y-2 === destination.y && this.checkForGreyPiece[origin.x+1][origin.y-1].piece.player.color != null) {
+          return true
+        }
+          // checkmate
+        else if (origin.x+2 === destination.x && origin.y+2 === destination.y && this.checkForGreyPiece[origin.x+1][origin.y+1].piece.player.color != null) {
+          return true
         }
       default:
         return false
@@ -173,7 +186,6 @@ class GamePlay {
     // this.redTurn = true
     // this.greyTurn = true
 
-
   if (this.moveDefault === false) {
 
 
@@ -182,6 +194,13 @@ class GamePlay {
       revert: true
     });
 }
+$(`.piece-${this.currentPlayPiece}`).draggable({
+  start: function(event, ui) {
+
+    this.originX = ui.helper.parent('div').data().x;
+    this.originY = ui.helper.parent('div').data().y;
+  }.bind(this)
+});
     $(`.piece-${this.currentPlayPiece}`).draggable({
       start: function(event, ui) {
 
@@ -194,7 +213,7 @@ class GamePlay {
 
       drop: function(event, ui) {
         self.play.bind(self)(checkers.game.board[this.dataset.x][this.dataset.y])
-        let draggableId = ui.draggable.attr("class");
+        let draggableId = ui.draggable[0].className;
         let droppableId = $(this).attr("class");
         self.destinationX = $(this).data().x
         self.destinationY = $(this).data().y
@@ -202,7 +221,6 @@ class GamePlay {
           $(this).html(`<div class="piece-${self.addClassColor} ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
 
           ui.draggable.remove()
-          ui.draggable.removeClass(`.piece-${self.addClassColor}`)
         }
       }
     });
@@ -211,6 +229,8 @@ class GamePlay {
   play(destination) {
     let originNode = event.target.parentElement
     let origin = checkers.game.board[originNode.dataset.x][originNode.dataset.y]
+
+
     if (checkers.game.rules.validMove(destination, origin)) {
 
       this.valid = true
@@ -245,11 +265,6 @@ class GamePlay {
     $(`.piece-${this.currentPlayPiece}`).draggable({
       opacity: 0.35
     });
-
-    // $(`.piece-red`).draggable({
-    //   disabled: !self.redTurn
-    //
-    // });
 
     this.moveDefault = true
   }
