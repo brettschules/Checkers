@@ -119,8 +119,8 @@ class CheckerRules {
     this.checkForGreyPieceRight = ""
   }
 
-  removeChessPieceWhenCheckmated(origin, removeClass) {
-    document.getElementById(`${origin.x + 1}${origin.y - 1}`).childNodes[0].remove(removeClass);
+  removeChessPieceWhenCheckmated(originX, originY, removeClass) {
+    document.getElementById(`${originX}${originY}`).childNodes[0].remove(removeClass);
   }
 
   validMove(destination, origin) {
@@ -153,7 +153,7 @@ class CheckerRules {
           return true
         }
         else if (origin.x+2 === destination.x && origin.y-2 === destination.y && this.checkForGreyPieceLeft) {
-          this.removeChessPieceWhenCheckmated(origin, "piece-grey")
+          this.removeChessPieceWhenCheckmated(origin.x+1, origin.y-1, "piece-grey")
           this.playerRedCheckmateCount++
           return true
         }
