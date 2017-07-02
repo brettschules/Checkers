@@ -129,12 +129,15 @@ class CheckerRules {
       this.checkForGreyPieceLeft = checkers.game.board[origin.x+1][origin.y-1].piece
     }
 
+    if(checkers.game.board[origin.x+1][origin.y-1].piece !==null) {
+      this.checkForGreyPieceRight = checkers.game.board[origin.x+1][origin.y+1].piece
+    }
+
     let currentPlayerChessPieceColor = origin.piece.player.color
 
     if (destination.x < 0 && destination.y < 0) {
       return false
     }
-
 
     switch (currentPlayerChessPieceColor) {
       case "grey":
@@ -143,8 +146,6 @@ class CheckerRules {
           return true
         } else if (origin.x - 1 === destination.x && origin.y + 1 === destination.y) {
           return true
-
-
         };
       case "red":
         if (origin.x + 1 === destination.x && origin.y - 1 === destination.y) {
@@ -158,7 +159,8 @@ class CheckerRules {
           return true
         }
           // checkmate
-        else if (origin.x+2 === destination.x && origin.y+2 === destination.y && this.checkForGreyPiece[origin.x+1][origin.y+1].piece.player.color) {
+        else if (origin.x+2 === destination.x && origin.y+2 === destination.y && this.checkForGreyPieceRight) {
+          this.removeChessPieceWhenCheckmated(origin.x+1, origin.y+1, "piece-grey")
           this.playerRedCheckmateCount++
           return true
         }
