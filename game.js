@@ -117,6 +117,8 @@ class CheckerRules {
     this.playerGreyCheckmateCount = 0
     this.checkForGreyPieceLeft = ""
     this.checkForGreyPieceRight = ""
+    this.checkForRedPieceLeft = ""
+    this.checkForRedPieceRight = ""
   }
 
   removeChessPieceWhenCheckmated(originX, originY, removeClass) {
@@ -129,8 +131,16 @@ class CheckerRules {
       this.checkForGreyPieceLeft = checkers.game.board[origin.x+1][origin.y-1].piece
     }
 
-    if(checkers.game.board[origin.x+1][origin.y-1].piece !==null) {
+    if(checkers.game.board[origin.x+1][origin.y+1].piece !==null) {
       this.checkForGreyPieceRight = checkers.game.board[origin.x+1][origin.y+1].piece
+    }
+
+    if(checkers.game.board[origin.x-1][origin.y-1].piece !==null) {
+      this.checkForRedPieceLeft = checkers.game.board[origin.x-1][origin.y-1].piece
+    }
+
+    if(checkers.game.board[origin.x-1][origin.y+1].piece !==null) {
+      this.checkForRedPieceRight = checkers.game.board[origin.x-1][origin.y+1].piece
     }
 
     let currentPlayerChessPieceColor = origin.piece.player.color
@@ -146,7 +156,15 @@ class CheckerRules {
           return true
         } else if (origin.x - 1 === destination.x && origin.y + 1 === destination.y) {
           return true
-        };
+        } else if (origin.x-2 === destination.x && origin.y-2 === destination.y && this.checkForRedPieceLeft) {
+          this.removeChessPieceWhenCheckmated(origin.x-1, origin.y-1, "piece-red")
+          return true
+        } else if (origin.x-2 === destination.x && origin.y+2 === destination.y && this.checkForRedPieceRight) {
+          this.removeChessPieceWhenCheckmated(origin.x-1, origin.y+1, "piece-red")
+          return true
+        } else {
+          return false;
+        }
       case "red":
         if (origin.x + 1 === destination.x && origin.y - 1 === destination.y) {
           return true
@@ -236,13 +254,13 @@ $(`.piece-${this.currentPlayPiece}`).draggable({
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.addClassColor = "red"
         this.currentPlayPiece = "grey"
-        this.redTurn = true
 
       } else if (this.currentPlayPiece === "grey") {
         checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.addClassColor = "grey"
         this.currentPlayPiece = "red"
+
       }
 
     } else {
