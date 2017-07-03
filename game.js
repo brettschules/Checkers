@@ -286,7 +286,7 @@ class GamePlay {
       revert: !self.valid
     });
 
-    $(`.piece-${this.disabledPiece}`).draggable('disable');
+    $(`.piece-${this.disabledPiece}`).draggable({ disabled: true });
     $(`.piece-${this.enabledPiece}`).draggable('enable');
     console.log(this.disabledPiece + " disabled")
     console.log(this.enabledPiece + " enabled")
