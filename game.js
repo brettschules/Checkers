@@ -160,9 +160,11 @@ class CheckerRules {
           return true
         } else if (origin.x - 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x-1][origin.y-1].piece !==null) {
           this.removeChessPieceWhenCheckmated(origin.x - 1, origin.y - 1, "piece-red")
+          this.playerGreyCheckmateCount++
           return true
         } else if (origin.x - 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x-1][origin.y+1].piece !== null) {
           this.removeChessPieceWhenCheckmated(origin.x - 1, origin.y + 1, "piece-red")
+          this.playerGreyCheckmateCount++
           return true
         } else {
           return false;
@@ -206,6 +208,9 @@ class GamePlay {
     this.time = "0:00"
     this.valid = false
     this.moveDefault = false
+    this.disabledPiece = "grey"
+    this.enabledPiece = "red"
+
     // this.redTurn = true
     // this.greyTurn = true
 
@@ -217,13 +222,14 @@ class GamePlay {
       revert: true
     });
 }
-$(`.piece-${this.currentPlayPiece}`).draggable({
-  start: function(event, ui) {
-
-    this.originX = ui.helper.parent('div').data().x;
-    this.originY = ui.helper.parent('div').data().y;
-  }.bind(this)
-});
+// $(`.piece-${this.currentPlayPiece}`).draggable({
+//   start: function(event, ui) {
+//     console.log(this.currentPlayPiece + " current")
+//
+//     this.originX = ui.helper.parent('div').data().x;
+//     this.originY = ui.helper.parent('div').data().y;
+//   }.bind(this)
+// });
 
     $(".cell-black").droppable({
 
@@ -234,8 +240,7 @@ $(`.piece-${this.currentPlayPiece}`).draggable({
         self.destinationX = $(this).data().x
         self.destinationY = $(this).data().y
         if (self.valid) {
-          $(this).html(`<div class="piece-${self.addClassColor} ui-draggable ui-draggable-handle" style="position: relative;"></div>`)
-
+          $(this).html(`<div class="piece-${self.addClassColor}"></div>`)
           ui.draggable.remove()
         }
       }
@@ -251,18 +256,21 @@ $(`.piece-${this.currentPlayPiece}`).draggable({
 
       this.valid = true
       if (this.currentPlayPiece === "red") {
-
         checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.addClassColor = "red"
         this.currentPlayPiece = "grey"
+        this.disabledPiece = "red"
+        this.enabledPiece = "grey"
+
 
       } else if (this.currentPlayPiece === "grey") {
         checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.addClassColor = "grey"
         this.currentPlayPiece = "red"
-
+        this.disabledPiece = "grey"
+        this.enabledPiece = "red"
       }
 
     } else {
@@ -277,6 +285,15 @@ $(`.piece-${this.currentPlayPiece}`).draggable({
 
       revert: !self.valid
     });
+
+    $(`.piece-${this.disabledPiece}`).draggable('disable');
+    $(`.piece-${this.enabledPiece}`).draggable('enable');
+    console.log(this.disabledPiece + " disabled")
+    console.log(this.enabledPiece + " enabled")
+
+    // $( !`.piece-${this.disabledPiece}`).draggable({
+    //   disabled: false
+    // });
 
     $(`.piece-${this.currentPlayPiece}`).draggable({
       opacity: 0.35
@@ -295,9 +312,3 @@ checkers.render()
 
 g = new GamePlay()
 g.onClick()
-
-
-
-// $( ".selector" ).draggable({
-//   disabled: true
-// });
