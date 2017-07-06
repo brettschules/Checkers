@@ -156,6 +156,7 @@ class CheckerRules {
           this.removeChessPieceWhenCheckmated(origin.x - 1, origin.y + 1, "piece-red")
           this.playerGreyCheckmateCount++
           return true
+
         } else {
           return false;
         }
@@ -200,6 +201,8 @@ class GamePlay {
     this.disabledPiece = "grey"
     this.enabledPiece = "red"
     this.changeColor = true
+    this.x = null
+    this.y = null
 
 
     // this.redTurn = true
@@ -212,7 +215,7 @@ class GamePlay {
 
       revert: true
     });
-}
+  }
 // $(`.piece-${this.currentPlayPiece}`).draggable({
 //   start: function(event, ui) {
 //     console.log(this.currentPlayPiece + " current")
@@ -224,14 +227,15 @@ class GamePlay {
 
 
     // end
-  }
+}
 
 droppable() {
-  $(".cell-black").droppable({
+  $(".cell-white, .cell-black").droppable({
     drop: function(event, ui) {
       console.log("fires")
       g.play(checkers.game.board[this.dataset.x][this.dataset.y])
-      console.log(this.dataset.x)
+      g.x = this.dataset.x
+      g.y = this.dataset.y
       let droppableId = $(this).attr("class");
       if (self.valid) {
         $(this).html(`<div class="piece-${self.addClassColor}"></div>`)
@@ -260,23 +264,24 @@ checkPieceTurn(currentPlayPiece) {
   }
 validMove(destination, origin, originNode) {
   if (checkers.game.rules.validMove(destination, origin)) {
-
     this.valid = true
     if (this.currentPlayPiece === "red") {
       checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
       checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
       this.checkPieceTurn(this.currentPlayPiece)
-
+      console.log(" valid")
 
     } else if (this.currentPlayPiece === "grey") {
       checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
       checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
       this.checkPieceTurn(this.currentPlayPiece)
+      console.log(" valid")
     }
 
   } else {
 
     this.valid = false
+    console.log("not valid")
   }
 }
 
@@ -315,6 +320,10 @@ moveAgain() {
   $(`.piece-${this.currentPlayPiece}`).draggable({
     opacity: 0.35
   });
+}
+
+pieceGoAgain() {
+
 }
 
 repeatPlay(destination, origin, originNode) {
