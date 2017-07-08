@@ -117,6 +117,7 @@ class CheckerRules {
     this.removeClass = ""
     this.playerRedCheckmateCount = 0
     this.playerGreyCheckmateCount = 0
+    // this.multipleCheckmates = this.multipleCheckmates
     // this.checkForGreyPieceLeft = ""
     // this.checkForGreyPieceRight = ""
     // this.checkForRedPieceLeft = ""
@@ -129,9 +130,21 @@ class CheckerRules {
     document.getElementById(`${originX}${originY}`).childNodes[0].remove(removeClass);
   }
 
-  checkForGreyPieceLeft() {
+  // NEED TO SPECIFY THAT PIECE OBJECT IS NOT CURRENT PIECE COLOR
 
-  }
+    multipleCheckmates(destination) {
+      if (destination.x <= 0 || destination.y <= 0) {
+
+        return false
+      }
+      if(checkers.game.board[destination.x+1][destination.y-1].piece !== null &&  checkers.game.board[destination.x+2][destination.y-2].piece === null && destination.x) {
+        debugger
+        return true
+      }
+
+
+        console.log("destination " + destination.x+1, destination.y-1 +"," + "end " + destination.x+2 +  destination.y-2)
+    }
 
   validMove(destination, origin) {
 
@@ -144,35 +157,36 @@ class CheckerRules {
     switch (currentPlayerChessPieceColor) {
       case "grey":
 
-        if (origin.x - 1 === destination.x && origin.y - 1 === destination.y) {
+        if (origin.x - 1 === destination.x && origin.y - 1 === destination.y && checkers.game.board[origin.x-1][origin.y-1].piece === null) {
           return true
-        } else if (origin.x - 1 === destination.x && origin.y + 1 === destination.y) {
+        } else if (origin.x - 1 === destination.x && origin.y + 1 === destination.y && checkers.game.board[origin.x-1][origin.y+1].piece === null) {
           return true
-        } else if (origin.x - 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x-1][origin.y-1].piece !==null) {
+        } else if (origin.x - 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x-1][origin.y-1].piece.player.color === "red") {
           this.removeChessPieceWhenCheckmated(origin.x - 1, origin.y - 1, "piece-red")
           this.playerGreyCheckmateCount++
           return true
-        } else if (origin.x - 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x-1][origin.y+1].piece !== null) {
+        } else if (origin.x - 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x-1][origin.y+1].piece.player.color === "red") {
           this.removeChessPieceWhenCheckmated(origin.x - 1, origin.y + 1, "piece-red")
           this.playerGreyCheckmateCount++
           return true
 
         } else {
+
           return false;
         }
       case "red":
-        if (origin.x + 1 === destination.x && origin.y - 1 === destination.y) {
+        if (origin.x + 1 === destination.x && origin.y - 1 === destination.y && checkers.game.board[origin.x+1][origin.y-1].piece === null) {
           return true
-        } else if (origin.x + 1 === destination.x && origin.y + 1 === destination.y) {
+        } else if (origin.x + 1 === destination.x && origin.y + 1 === destination.y && checkers.game.board[origin.x+1][origin.y+1].piece === null) {
           return true
         }
-        else if (origin.x + 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x+1][origin.y-1].piece !== null) {
+        else if (origin.x + 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x+1][origin.y-1].piece.player.color === "grey") {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y - 1, "piece-grey")
           this.playerRedCheckmateCount++
           return true
         }
           // checkmate
-        else if (origin.x + 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x+1][origin.y+1].piece !== null) {
+        else if (origin.x + 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x+1][origin.y+1].piece.player.color === "grey") {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y + 1, "piece-grey")
           this.playerRedCheckmateCount++
           return true
@@ -233,9 +247,9 @@ droppable() {
   $(".cell-white, .cell-black").droppable({
     drop: function(event, ui) {
       console.log("fires")
-      g.play(checkers.game.board[this.dataset.x][this.dataset.y])
       g.x = this.dataset.x
       g.y = this.dataset.y
+      g.play(checkers.game.board[this.dataset.x][this.dataset.y])
       let droppableId = $(this).attr("class");
       if (self.valid) {
         $(this).html(`<div class="piece-${self.addClassColor}"></div>`)
@@ -294,7 +308,7 @@ moveOnce() {
     revert: !this.valid
   });
 
-  $(`.piece-${this.disabledPiece}`).draggable({ disabled: true });
+  $(`.piece-${this.disabledPiece}`).draggable( {disabled: true }).removeClass(`.piece-${this.disabledPiece}`);
   $(`.piece-${this.enabledPiece}`).draggable('enable');
   console.log(this.disabledPiece + " disabled")
   console.log(this.enabledPiece + " enabled")
@@ -312,7 +326,7 @@ moveAgain() {
   });
 
 
-  $(`.piece-${this.enabledPiece}`).draggable({ disabled: true });
+  $(`.piece-${this.enabledPiece}`).draggable({ disabled: false }).removeClass(`.piece-${this.enabledPiece}`);
   $(`.piece-${this.disabledPiece}`).draggable('enable');
   console.log(this.enabledPiece + " disabled")
   console.log(this.disabledPiece + " enabled")
@@ -327,28 +341,30 @@ pieceGoAgain() {
 }
 
 repeatPlay(destination, origin, originNode) {
-  if (3!==3) {
-    this.changeColor = false
-    this.validMove(destination, origin, originNode)
-    this.moveAgain()
-  } else {
+  this.validMove(destination, origin, originNode)
+  // if (checkers.game.rules.multipleCheckmates(destination)) {
+  //   console.log(destination.x + " x" + destination.y + "y "+"destination")
+  //   this.changeColor = false
+  //   this.moveAgain()
+  // } else {
     this.changeColor = true
-    this.validMove(destination, origin, originNode)
     this.moveOnce()
-  }
+  // }
 }
 
   play(destination) {
     let originNode = event.target.parentElement
 
     let origin = checkers.game.board[originNode.dataset.x][originNode.dataset.y]
-
     this.repeatPlay(destination, origin, originNode)
-
 
     this.moveDefault = true
   // onClick() {
   //   $(`.piece-${this.currentPlayPiece}`).mousedown()
+  }
+
+  start() {
+
   }
 }
 
