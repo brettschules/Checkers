@@ -1,18 +1,38 @@
 <html>
-
-<head>
-  <title>Checkers</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-</head>
-
-<body>
-  <div id="container">
-  </div>
-</div>
-  <script type="text/javascript" src="game.js"></script>
-</body>
-
+  <head>
+    <title>Checkers</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <td>
+          <div>
+            <h1>
+              Red Player Score
+            </h1>
+            <p id="red-player-score">
+              0
+            </p>
+          </div>
+          <div>
+            <h1>
+              Grey Player Score
+            </h1>
+            <p id="grey-player-score">
+              0
+            </p>
+          </div>
+        </td>
+        <td>
+          <div id="container">
+          </div>
+        </td>
+      </tr>
+    </table>
+    <script type="text/javascript" src="game.js"></script>
+  </body>
 </html>

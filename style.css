@@ -50,3 +50,11 @@ div.piece-grey {
  margin-top:12.5px;
  border-radius: 25px;
 }
+
+#red-player-score {
+  text-align: center;
+}
+
+#grey-player-score {
+  text-align: center;
+}

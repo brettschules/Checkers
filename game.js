@@ -114,6 +114,7 @@ class CheckerRules {
     this.removeClass = ""
     this.playerRedCheckmateCount = 0
     this.playerGreyCheckmateCount = 0
+    this.gameInfo = new GameInfo()
   }
 
   removeChessPieceWhenCheckmated(originX, originY, removeClass) {
@@ -130,7 +131,6 @@ class CheckerRules {
     if (destination.x < 0 && destination.y < 0) {
       return false
     }
-
     switch (currentPlayerChessPieceColor) {
       case "grey":
         if (origin.x - 1 === destination.x && origin.y - 1 === destination.y && destination.piece === null) {
@@ -142,11 +142,13 @@ class CheckerRules {
         } else if (origin.x - 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x-1][origin.y-1].piece !==null) {
           this.removeChessPieceWhenCheckmated(origin.x - 1, origin.y - 1, "piece-red")
           this.playerGreyCheckmateCount++
+          this.gameInfo.render(this.playerRedCheckmateCount, this.playerGreyCheckmateCount)
           return true
           // up left when making a checkmate
         } else if (origin.x - 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x-1][origin.y+1].piece !== null) {
           this.removeChessPieceWhenCheckmated(origin.x - 1, origin.y + 1, "piece-red")
           this.playerGreyCheckmateCount++
+          this.gameInfo.render(this.playerRedCheckmateCount, this.playerGreyCheckmateCount)
           return true
           // up right when making a checkmate
         } else {
@@ -163,6 +165,7 @@ class CheckerRules {
         else if (origin.x + 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x+1][origin.y-1].piece !== null) {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y - 1, "piece-grey")
           this.playerRedCheckmateCount++
+          this.gameInfo.render(this.playerRedCheckmateCount, this.playerGreyCheckmateCount)
           return true
           // down left when making a checkmate
         }
@@ -170,6 +173,7 @@ class CheckerRules {
         else if (origin.x + 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x+1][origin.y+1].piece !== null) {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y + 1, "piece-grey")
           this.playerRedCheckmateCount++
+          this.gameInfo.render(this.playerRedCheckmateCount, this.playerGreyCheckmateCount)
           return true
           // down right when making a checkmate
         }
@@ -189,8 +193,6 @@ class GamePlay {
     this.redPlayerChips = 12
     this.greyPlayerMoves = 0
     this.redPlayerMoves = 0
-    this.greyPlayerScore = 0
-    this.redPlayerScore = 0
     this.time = "0:00"
     this.valid = false
     this.moveDefault = false
@@ -308,6 +310,19 @@ class GamePlay {
     let origin = checkers.game.board[originNode.dataset.x][originNode.dataset.y]
     this.repeatPlay(destination, origin, originNode)
     this.moveDefault = true
+  }
+}
+
+class GameInfo {
+  constructor() {
+    this.redPlayerScore = document.getElementById("red-player-score")
+    this.greyPlayerScore = document.getElementById("grey-player-score")
+  }
+  render(playerRedCheckmateCount, playerGreyCheckmateCount) {
+    return (
+      this.redPlayerScore.innerHTML = playerRedCheckmateCount,
+      this.greyPlayerScore.innerHTML = playerGreyCheckmateCount
+    )
   }
 }
 
