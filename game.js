@@ -6,7 +6,6 @@ class ChessPiece {
     this.moveAgain = false
     this.king = false
   }
-
   render() {
     return `<div class='piece-${this.player.color}'></div>`
   }
@@ -27,14 +26,13 @@ class Cell {
 
   addPiece(piece) {
     this.piece = piece
-
   }
 
   render() {
     return (
       `<div id='${this.x}${this.y}' data-x='${this.x}' data-y='${this.y}'class='cell cell-${this.color}'>
-          ${this.piece !== null ? this.piece.render() : ""}
-        </div>`
+        ${this.piece !== null ? this.piece.render() : ""}
+      </div>`
     )
   }
 }
@@ -125,7 +123,6 @@ class CheckerRules {
     // removes checkers piece object on board
   }
 
-
   validMove(destination, origin) {
     console.log(origin, "origin"  , destination, "destination")
     let currentPlayerChessPieceColor = origin.piece.player.color
@@ -167,14 +164,14 @@ class CheckerRules {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y - 1, "piece-grey")
           this.playerRedCheckmateCount++
           return true
-          // down left
+          // down left when making a checkmate
         }
           // checkmate
         else if (origin.x + 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x+1][origin.y+1].piece !== null) {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y + 1, "piece-grey")
           this.playerRedCheckmateCount++
           return true
-          // down right
+          // down right when making a checkmate
         }
       default:
         return false
@@ -203,37 +200,30 @@ class GamePlay {
     this.x = null
     this.y = null
 
+    if (this.moveDefault === false) {
+      $(`.piece-${this.currentPlayPiece}`).draggable({
+        revert: true
+      });
+    }
+  }
 
-    // this.redTurn = true
-    // this.greyTurn = true
-
-  if (this.moveDefault === false) {
-
-
-    $(`.piece-${this.currentPlayPiece}`).draggable({
-
-      revert: true
+  droppable() {
+    $(".cell-white, .cell-black").droppable({
+      drop: function(event, ui) {
+        console.log("fires")
+        g.play(checkers.game.board[this.dataset.x][this.dataset.y])
+        g.x = this.dataset.x
+        g.y = this.dataset.y
+        let droppableId = $(this).attr("class");
+        if (self.valid) {
+          $(this).html(`<div class="piece-${self.addClassColor}"></div>`)
+          ui.draggable.remove()
+        }
+      }
     });
   }
-}
 
-droppable() {
-  $(".cell-white, .cell-black").droppable({
-    drop: function(event, ui) {
-      console.log("fires")
-      g.play(checkers.game.board[this.dataset.x][this.dataset.y])
-      g.x = this.dataset.x
-      g.y = this.dataset.y
-      let droppableId = $(this).attr("class");
-      if (self.valid) {
-        $(this).html(`<div class="piece-${self.addClassColor}"></div>`)
-        ui.draggable.remove()
-      }
-    }
-  });
-}
-
-checkPieceTurn(currentPlayPiece) {
+  checkPieceTurn(currentPlayPiece) {
     if (currentPlayPiece === "grey") {
       this.addClassColor = "grey"
       if (this.changeColor) {
@@ -250,96 +240,79 @@ checkPieceTurn(currentPlayPiece) {
       this.enabledPiece = "grey"
     }
   }
-validMove(destination, origin, originNode) {
-  if (checkers.game.rules.validMove(destination, origin)) {
-    this.valid = true
-    if (this.currentPlayPiece === "red") {
-      checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
-      checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
-      this.checkPieceTurn(this.currentPlayPiece)
-      console.log(" valid")
-
-    } else if (this.currentPlayPiece === "grey") {
-      checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
-      checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
-      this.checkPieceTurn(this.currentPlayPiece)
-      console.log(" valid")
+  validMove(destination, origin, originNode) {
+    if (checkers.game.rules.validMove(destination, origin)) {
+      this.valid = true
+      if (this.currentPlayPiece === "red") {
+        checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
+        checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
+        this.checkPieceTurn(this.currentPlayPiece)
+        console.log(" valid")
+      } else if (this.currentPlayPiece === "grey") {
+        checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
+        checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
+        this.checkPieceTurn(this.currentPlayPiece)
+        console.log(" valid")
+      }
+    } else {
+      this.valid = false
+      console.log("not valid")
     }
-
-  } else {
-
-    this.valid = false
-    console.log("not valid")
   }
-}
 
-moveOnce() {
-  console.log(this.currentPlayPiece)
-  console.log(this.valid)
+  moveOnce() {
+    console.log(this.currentPlayPiece)
+    console.log(this.valid)
+    $(`.piece-${this.currentPlayPiece}`).draggable({
+      revert: !this.valid
+    });
 
-  $(`.piece-${this.currentPlayPiece}`).draggable({
+    $(`.piece-${this.disabledPiece}`).draggable({ disabled: true });
+    $(`.piece-${this.enabledPiece}`).draggable('enable');
+    console.log(this.disabledPiece + " disabled")
+    console.log(this.enabledPiece + " enabled")
 
-    revert: !this.valid
-  });
+    $(`.piece-${this.currentPlayPiece}`).draggable({
+      opacity: 0.35
+    });
+  }
 
-  $(`.piece-${this.disabledPiece}`).draggable({ disabled: true });
-  $(`.piece-${this.enabledPiece}`).draggable('enable');
-  console.log(this.disabledPiece + " disabled")
-  console.log(this.enabledPiece + " enabled")
-
-  $(`.piece-${this.currentPlayPiece}`).draggable({
-    opacity: 0.35
-  });
-
-}
-
-moveAgain() {
-  $(`.piece-${this.currentPlayPiece}`).draggable({
-
+  moveAgain() {
+    $(`.piece-${this.currentPlayPiece}`).draggable({
     revert: !self.valid
-  });
+    });
+    $(`.piece-${this.enabledPiece}`).draggable({ disabled: true });
+    $(`.piece-${this.disabledPiece}`).draggable('enable');
+    console.log(this.enabledPiece + " disabled")
+    console.log(this.disabledPiece + " enabled")
 
-
-  $(`.piece-${this.enabledPiece}`).draggable({ disabled: true });
-  $(`.piece-${this.disabledPiece}`).draggable('enable');
-  console.log(this.enabledPiece + " disabled")
-  console.log(this.disabledPiece + " enabled")
-
-  $(`.piece-${this.currentPlayPiece}`).draggable({
-    opacity: 0.35
-  });
-}
-
-
-repeatPlay(destination, origin, originNode) {
-  if (3!==3) {
-    this.changeColor = false
-    this.validMove(destination, origin, originNode)
-    this.moveAgain()
-  } else {
-    this.changeColor = true
-    this.validMove(destination, origin, originNode)
-    this.moveOnce()
+    $(`.piece-${this.currentPlayPiece}`).draggable({
+      opacity: 0.35
+    });
   }
-}
+
+  repeatPlay(destination, origin, originNode) {
+    if (3!==3) {
+      this.changeColor = false
+      this.validMove(destination, origin, originNode)
+      this.moveAgain()
+    } else {
+      this.changeColor = true
+      this.validMove(destination, origin, originNode)
+      this.moveOnce()
+    }
+  }
 
   play(destination) {
     let originNode = event.target.parentElement
-
     let origin = checkers.game.board[originNode.dataset.x][originNode.dataset.y]
-
     this.repeatPlay(destination, origin, originNode)
-
-
     this.moveDefault = true
-  // onClick() {
-  //   $(`.piece-${this.currentPlayPiece}`).mousedown()
   }
 }
 
 checkers = new App()
 checkers.render()
-
 
  g = new GamePlay()
  g.droppable()
