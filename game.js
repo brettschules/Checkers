@@ -1,4 +1,5 @@
 
+// generates chess pieces
 class ChessPiece {
   constructor(player, cell) {
     this.player = player
@@ -11,6 +12,7 @@ class ChessPiece {
   }
 }
 
+// generates cells on the board
 class Cell {
   constructor(x, y, color) {
     this.x = x,
@@ -37,6 +39,7 @@ class Cell {
   }
 }
 
+// generates checkers board
 class Board {
   constructor() {
     this.boardSize = 8
@@ -47,6 +50,7 @@ class Board {
     let colors = ['white', 'black']
     var boardArray = []
 
+    // alogrithm to alternate black and white color cells on board
     for (let x = 0; x < this.boardSize; x++) {
       let colorNum = 0
       if (x % 2 === 0) {
@@ -78,6 +82,7 @@ class Player {
   }
 }
 
+// initializes the players, board, and checkers pieces on the board
 class Game {
   constructor() {
     this.playerOne = new Player("red")
@@ -87,6 +92,7 @@ class Game {
     this.loadPieces = this.loadPieces()
   }
 
+// alogrithm that only loads 12 checker pieces on first 12 black cells only for each cells
   loadPieces() {
     this.array = []
     this.board.forEach(row => this.array.push(row.filter(e => e.color === "black")))
@@ -97,6 +103,7 @@ class Game {
   }
 }
 
+// initializes the game and rules.  Writes to the HTML
 class App {
   constructor() {
     this.game = new Game()
@@ -109,6 +116,7 @@ class App {
   }
 }
 
+// rules to check if a player's move is valid or not
 class CheckerRules {
   constructor() {
     this.removeClass = ""
@@ -183,6 +191,7 @@ class CheckerRules {
   }
 }
 
+// actual game play
 class GamePlay {
   constructor() {
     self = this
@@ -242,6 +251,8 @@ class GamePlay {
       this.enabledPiece = "grey"
     }
   }
+  // checks to see if the move is valid, if it is the checker piece and be dropped in the new location.
+  // If not, the checker piece reverts back to it's origin place
   validMove(destination, origin, originNode) {
     if (checkers.game.rules.validMove(destination, origin)) {
       this.valid = true
@@ -313,6 +324,7 @@ class GamePlay {
   }
 }
 
+// writes player's score to HTML
 class GameInfo {
   constructor() {
     this.redPlayerScore = document.getElementById("red-player-score")
