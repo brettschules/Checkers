@@ -132,6 +132,28 @@ class CheckerRules {
     // removes checkers piece object on board
   }
 
+  setCheckerPieceToKing(destination) {
+    if (destination.x === 7 || destination.x === 0) {
+      checkers.game.board[destination.x][destination.y].piece.king = true
+    }
+  }
+  // checks to see if the checker piece should be set to King
+
+  currentPlayerChessPieceColor(origin) {
+    if(origin.piece.player.color === "grey" && origin.piece.king) {
+      return "red"
+    } else if (origin.piece.player.color === "grey") {
+      return "grey"
+    } else if (origin.piece.player.color === "red" && origin.piece.king) {
+      debugger
+      return "grey"
+    } else if (origin.piece.player.color === "red") {
+      return "red"
+    }
+  }
+
+  // checks currentPlayerChessPieceColor or if it is a king
+
   validMove(destination, origin) {
     console.log(origin, "origin"  , destination, "destination")
     let currentPlayerChessPieceColor = origin.piece.player.color
@@ -139,7 +161,8 @@ class CheckerRules {
     if (destination.x < 0 && destination.y < 0) {
       return false
     }
-    switch (currentPlayerChessPieceColor) {
+    switch (this.currentPlayerChessPieceColor(origin)) {
+
       case "grey":
         if (origin.x - 1 === destination.x && origin.y - 1 === destination.y && destination.piece === null) {
           return true
@@ -260,11 +283,13 @@ class GamePlay {
         checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.checkPieceTurn(this.currentPlayPiece)
+        checkers.game.rules.setCheckerPieceToKing(destination)
         console.log(" valid")
       } else if (this.currentPlayPiece === "grey") {
         checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.checkPieceTurn(this.currentPlayPiece)
+        checkers.game.rules.setCheckerPieceToKing(destination)
         console.log(" valid")
       }
     } else {
