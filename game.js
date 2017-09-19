@@ -132,22 +132,27 @@ class CheckerRules {
     // removes checkers piece object on board
   }
 
-  setCheckerPieceToKing(destination) {
+  setCheckerPieceToKing(orgin, destination) {
     if (destination.x === 7 || destination.x === 0) {
       checkers.game.board[destination.x][destination.y].piece.king = true
+      debugger
+      // document.getElementById(`${originX}${originY}`).childNodes[0].remove(removeClass)
     }
   }
   // checks to see if the checker piece should be set to King
 
-  currentPlayerChessPieceColor(origin) {
-    if(origin.piece.player.color === "grey" && origin.piece.king) {
+  currentPlayerChessPieceColor(origin, destination) {
+    let currentPlayerChessPieceColor = origin.piece.player.color
+    if (destination.piece)
+      return false
+
+    if(currentPlayerChessPieceColor === "grey" && origin.piece.king) {
       return "red"
-    } else if (origin.piece.player.color === "grey") {
+    } else if (currentPlayerChessPieceColor === "grey") {
       return "grey"
-    } else if (origin.piece.player.color === "red" && origin.piece.king) {
-      debugger
+    } else if (currentPlayerChessPieceColor === "red" && origin.piece.king) {
       return "grey"
-    } else if (origin.piece.player.color === "red") {
+    } else if (currentPlayerChessPieceColor === "red") {
       return "red"
     }
   }
@@ -161,7 +166,8 @@ class CheckerRules {
     if (destination.x < 0 && destination.y < 0) {
       return false
     }
-    switch (this.currentPlayerChessPieceColor(origin)) {
+
+    switch (this.currentPlayerChessPieceColor(origin, destination)) {
 
       case "grey":
         if (origin.x - 1 === destination.x && origin.y - 1 === destination.y && destination.piece === null) {
@@ -193,7 +199,7 @@ class CheckerRules {
           return true
           // down right
         }
-        else if (origin.x + 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x+1][origin.y-1].piece !== null && origin.piece.player.color !== "red") {
+        else if (origin.x + 2 === destination.x && origin.y - 2 === destination.y && checkers.game.board[origin.x+1][origin.y-1].piece !== null) {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y - 1, "piece-grey")
           this.playerRedCheckmateCount++
           this.gameInfo.render(this.playerRedCheckmateCount, this.playerGreyCheckmateCount)
@@ -201,7 +207,7 @@ class CheckerRules {
           // down left when making a checkmate
         }
           // checkmate
-        else if (origin.x + 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x+1][origin.y+1].piece !== null && origin.piece.player.color !== "grey") {
+        else if (origin.x + 2 === destination.x && origin.y + 2 === destination.y && checkers.game.board[origin.x+1][origin.y+1].piece !== null) {
           this.removeChessPieceWhenCheckmated(origin.x + 1, origin.y + 1, "piece-grey")
           this.playerRedCheckmateCount++
           this.gameInfo.render(this.playerRedCheckmateCount, this.playerGreyCheckmateCount)
@@ -249,7 +255,10 @@ class GamePlay {
         g.x = this.dataset.x
         g.y = this.dataset.y
         let droppableId = $(this).attr("class");
-        if (self.valid) {
+        if (self.valid && checkers.game.board[this.dataset.x][this.dataset.y].piece.king) {
+          $(this).html(`<div class="piece-${self.addClassColor} piece-king">K</div>`)
+          ui.draggable.remove()
+        } else if(self.valid) {
           $(this).html(`<div class="piece-${self.addClassColor}"></div>`)
           ui.draggable.remove()
         }
@@ -283,13 +292,13 @@ class GamePlay {
         checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.checkPieceTurn(this.currentPlayPiece)
-        checkers.game.rules.setCheckerPieceToKing(destination)
+        checkers.game.rules.setCheckerPieceToKing(origin, destination)
         console.log(" valid")
       } else if (this.currentPlayPiece === "grey") {
         checkers.game.board[destination.x][destination.y].piece = checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece
         checkers.game.board[originNode.dataset.x][originNode.dataset.y].piece = null
         this.checkPieceTurn(this.currentPlayPiece)
-        checkers.game.rules.setCheckerPieceToKing(destination)
+        checkers.game.rules.setCheckerPieceToKing(origin, destination)
         console.log(" valid")
       }
     } else {

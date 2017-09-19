@@ -51,6 +51,18 @@ div.piece-grey {
  border-radius: 25px;
 }
 
+div.piece-king {
+  background-image: url(Images/king.png);
+
+  text-align: center;
+  width: 50px;
+  height: 50px;
+  margin:auto;
+  margin-top:12.5px;
+  border-radius: 25px;
+  font-size: 35;
+}
+
 #red-player-score {
   text-align: center;
 }
