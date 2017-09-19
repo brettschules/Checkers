@@ -146,10 +146,10 @@ class CheckerRules {
 
     if (destination.x < origin.x && origin.piece.king) {
       return "grey"
-    } else if (currentPlayerChessPieceColor === "grey") {
-      return "grey"
     } else if (destination.x > origin.x && origin.piece.king) {
       return "red"
+    } else if (currentPlayerChessPieceColor === "grey") {
+      return "grey"
     } else if (currentPlayerChessPieceColor === "red") {
       return "red"
     }
