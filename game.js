@@ -132,26 +132,24 @@ class CheckerRules {
     // removes checkers piece object on board
   }
 
+  // checks to see if the checker piece should be set to King
   setCheckerPieceToKing(orgin, destination) {
     if (destination.x === 7 || destination.x === 0) {
       checkers.game.board[destination.x][destination.y].piece.king = true
-      debugger
-      // document.getElementById(`${originX}${originY}`).childNodes[0].remove(removeClass)
     }
   }
-  // checks to see if the checker piece should be set to King
 
   currentPlayerChessPieceColor(origin, destination) {
     let currentPlayerChessPieceColor = origin.piece.player.color
     if (destination.piece)
       return false
 
-    if(currentPlayerChessPieceColor === "grey" && origin.piece.king) {
-      return "red"
+    if (destination.x < origin.x && origin.piece.king) {
+      return "grey"
     } else if (currentPlayerChessPieceColor === "grey") {
       return "grey"
-    } else if (currentPlayerChessPieceColor === "red" && origin.piece.king) {
-      return "grey"
+    } else if (destination.x > origin.x && origin.piece.king) {
+      return "red"
     } else if (currentPlayerChessPieceColor === "red") {
       return "red"
     }
@@ -170,6 +168,7 @@ class CheckerRules {
     switch (this.currentPlayerChessPieceColor(origin, destination)) {
 
       case "grey":
+      case origin.piece.king:
         if (origin.x - 1 === destination.x && origin.y - 1 === destination.y && destination.piece === null) {
           return true
           // up left
@@ -192,6 +191,7 @@ class CheckerRules {
           return false;
         }
       case "red":
+      case origin.piece.king:
         if (origin.x + 1 === destination.x && origin.y - 1 === destination.y && destination.piece === null) {
           return true
           // down left
